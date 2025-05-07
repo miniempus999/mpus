@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login TRYOUT PPPK TENDIK PGRI Sukomoro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2a5ea8; /* Biru PGRI */
+      --primary-light: #3a6cb3;
+      --secondary: #e74c3c; /* Merah PGRI */
+      --accent: #27ae60;
+      --dark: #34495e;
+      --light: #ecf0f1;
+      --error: #e74c3c;
+      --text: #333333;
+      --text-light: #7f8c8d;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(42, 94, 168, 0.08) 0%, transparent 90%),
+        linear-gradient(to bottom, #ffffff, #f5f7fa);
+      line-height: 1.6;
+    }
+    
+    .login-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .login-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      padding: 2rem 1.5rem 3rem;
+      text-align: center;
+      color: white;
+      position: relative;
+      clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+    }
+    
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .logo-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      padding: 5px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    
+    .logo-caption {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: white;
+      background: rgba(0,0,0,0.15);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+    }
+    
+    .title-container {
+      margin-top: 1rem;
+    }
+    
+    .title-container h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .title-container p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+    
+    .form-container {
+      padding: 2.5rem 2rem;
+      margin-top: -1.5rem;
+    }
+    
+    .form-title {
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.5rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+    
+    .form-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--secondary);
+      border-radius: 3px;
+    }
+    
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: #f8f9fa;
+      color: var(--text);
+    }
+    
+    .input-group input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(42, 94, 168, 0.15);
+      background-color: white;
+    }
+    
+    .input-group input::placeholder {
+      color: var(--text-light);
+      opacity: 0.7;
+    }
+    
+    .password-container {
+      position: relative;
+    }
+    
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--text-light);
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      padding: 0.5rem;
+      transition: color 0.3s ease;
+    }
+    
+    .toggle-password:hover {
+      color: var(--primary);
+    }
+    
+    .login-button {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      padding: 1rem;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 12px rgba(42, 94, 168, 0.25);
+    }
+    
+    .login-button:hover {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(42, 94, 168, 0.3);
+    }
+    
+    .login-button:active {
+      transform: translateY(0);
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+    
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .footer a:hover {
+      text-decoration: underline;
+      color: var(--primary-light);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 576px) {
+      .login-container {
+        max-width: 100%;
+      }
+      
+      .header {
+        padding: 1.5rem 1rem 2.5rem;
+      }
+      
+      .form-container {
+        padding: 2rem 1.5rem;
+      }
+      
+      .logo {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .title-container h1 {
+        font-size: 1.4rem;
+      }
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .form-container {
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    /* Error State */
+    .error-message {
+      color: var(--error);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      height: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .error-message.show {
+      opacity: 1;
+      height: auto;
+    }
+    
+    /* Shake Effect */
+    .shake {
+      animation: shake 0.5s;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="header">
+      <div class="logo-container">
+        <!-- Logo PGRI -->
+        <div class="logo-wrapper">
+          <img src="image/logo_pgri.png" 
+               alt="Logo PGRI" 
+               class="logo"
+               onerror="this.onerror=null;this.src='https://via.placeholder.com/80?text=PGRI'">
+          <span class="logo-caption">PGRI Kabupaten Magetan</span>
+        </div>
+        
+        
+      </div>
+      
+      <div class="title-container">
+        <h1>TRYOUT PPPK TENDIK</h1>
+        <p>PGRI Kecamatan Sukomoro - Tahun 2025</p>
+      </div>
+    </div>
+    
+    <div class="form-container">
+      <h2 class="form-title">MASUK AKUN</h2>
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="nomorPeserta">
+            <i class="fas fa-id-card"></i> Nomor Peserta
+          </label>
+          <input type="text" id="nomorPeserta" placeholder="Contoh: PPSK2023001" required>
+        </div>
+        
+        <div class="input-group">
+          <label for="kodeAkses">
+            <i class="fas fa-lock"></i> Kode Akses
+          </label>
+          <div class="password-container">
+            <input type="password" id="kodeAkses" placeholder="Masukkan kode akses" required>
+            <button type="button" class="toggle-password" id="togglePassword">
+              <i class="far fa-eye"></i>
+            </button>
+          </div>
+          <div id="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>Kode akses salah atau nomor peserta kosong!</span>
+          </div>
+        </div>
+        
+        <button type="submit" class="login-button" id="loginBtn">
+          <i class="fas fa-sign-in-alt"></i> MASUK
+        </button>
+      </form>
+      
+      <div class="footer">
+        <p>© 2025 Dinas Pendidikan Kabupaten Magetan</p>
+        <p>Bantuan: <a href="mailto:pppk.sukomoro@example.com">pppk.sukomoro@example.com</a> | <a href="tel:+628123456789">085-707-xxx-xxx</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginForm = document.getElementById('loginForm');
+      const nomorPesertaInput = document.getElementById('nomorPeserta');
+      const kodeAksesInput = document.getElementById('kodeAkses');
+      const togglePassword = document.getElementById('togglePassword');
+      const errorMessage = document.getElementById('errorMessage');
+      const loginBtn = document.getElementById('loginBtn');
+      
+      // Valid kode akses (sesuaikan dengan kebutuhan)
+      const VALID_KODE_AKSES = 'nsps272';
+      
+      // Cek localStorage untuk nomor peserta sebelumnya
+      const savedNomor = localStorage.getItem('nomorPeserta');
+      if (savedNomor) {
+        nomorPesertaInput.value = savedNomor;
+        kodeAksesInput.focus();
+      }
+      
+      // Toggle password visibility
+      togglePassword.addEventListener('click', function() {
+        const icon = this.querySelector('i');
+        if (kodeAksesInput.type === 'password') {
+          kodeAksesInput.type = 'text';
+          icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+          kodeAksesInput.type = 'password';
+          icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+      });
+      
+      // Form submission
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const nomorPeserta = nomorPesertaInput.value.trim();
+        const kodeAkses = kodeAksesInput.value.trim();
+        
+        // Validasi input
+        if (!nomorPeserta || !kodeAkses) {
+          showError("Nomor peserta dan kode akses harus diisi!");
+          return;
+        }
+        
+        // Simpan nomor peserta
+        localStorage.setItem('nomorPeserta', nomorPeserta);
+        
+        // Validasi kode akses
+        if (kodeAkses !== VALID_KODE_AKSES) {
+          showError("Kode akses salah!");
+          loginForm.classList.add('shake');
+          setTimeout(() => loginForm.classList.remove('shake'), 500);
+          return;
+        }
+        
+        // Login sukses - ganti tombol
+        loginBtn.innerHTML = '<i class="fas fa-check-circle"></i> BERHASIL';
+        loginBtn.style.background = 'linear-gradient(135deg, var(--accent), #2ecc71)';
+        loginBtn.disabled = true;
+        
+        // Redirect setelah 1 detik
+        setTimeout(() => {
+          window.location.href = 'ujian.html';
+        }, 1000);
+      });
+      
+      function showError(message) {
+        errorMessage.querySelector('span').textContent = message;
+        errorMessage.classList.add('show');
+      }
+    });
+  </script>
+</body>
+</html>

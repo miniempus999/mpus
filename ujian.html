@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ujian Tryout PPPK TENDIK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2a5ea8;
+      --secondary: #e74c3c;
+      --answered: #4CAF50;
+      --doubt: #FF9800;
+      --unanswered: #f44336;
+      --text: #333;
+      --text-light: #666;
+      --bg: #f5f7fa;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      margin: 0;
+      padding: 0;
+      position: relative;
+      min-height: 100vh;
+    }
+    
+    body::after {
+      content: "";
+      background-image: url('image/logo_pgri.png');
+      background-size: 300px;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.08;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .student-info {
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .timer {
+      font-weight: 600;
+      color: var(--text);
+      background-color: #f0f0f0;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+    
+    .timer.warning {
+      color: var(--secondary);
+      animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    
+    .main-container {
+      display: flex;
+      max-width: 1200px;
+      margin: 20px auto;
+      gap: 20px;
+      padding: 0 20px;
+    }
+    
+    .question-nav {
+      width: 250px;
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      height: fit-content;
+    }
+    
+    .question-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    
+    .question-number {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .question-number:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .unanswered {
+      background-color: var(--unanswered);
+      color: white;
+    }
+    
+    .answered {
+      background-color: var(--answered);
+      color: white;
+    }
+    
+    .doubt {
+      background-color: var(--doubt);
+      color: white;
+    }
+    
+    .current {
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 0 2px rgba(42, 94, 168, 0.3);
+    }
+    
+    .question-area {
+      flex: 1;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .question-category {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .question-text {
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .option:hover {
+      background-color: #f9f9f9;
+    }
+    
+    .option input {
+      margin-right: 10px;
+    }
+    
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-doubt {
+      background-color: var(--doubt);
+      color: white;
+    }
+    
+    .btn-next {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn:hover:not(:disabled) {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .score-container {
+      display: none;
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    
+    .score-title {
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+    
+    .score-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+      
+      .question-nav {
+        width: 100%;
+      }
+      
+      .question-grid {
+        grid-template-columns: repeat(6, 1fr);
+      }
+    }
+
+    /* Tambahan untuk recovery notification */
+    .recovery-notice {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #2a5ea8;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Form Login (Awal) -->
+  <div id="login-form" style="max-width:400px; margin:50px auto; padding:20px; background:white; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); text-align:center;">
+    <h2 style="color:var(--primary);">Masuk Ujian</h2>
+    <input type="text" id="input-nomor" placeholder="Nama Peserta" 
+           style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:4px;">
+    <button onclick="mulaiUjian()" 
+            style="padding:10px 20px; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">
+      Mulai Ujian
+    </button>
+  </div>
+
+  <!-- Area Ujian (Awalnya Disembunyikan) -->
+  <div id="exam-container" style="display:none;">
+    <div class="header">
+      <div class="student-info" id="student-info">PPPK KECAMATAN SUKOMORO</div>
+      <div class="timer" id="timer">Waktu: 120:00</div>
+    </div>
+    
+    <div class="main-container">
+      <div class="question-nav">
+        <h3>Navigasi Soal</h3>
+        <div class="question-grid" id="daftar-soal"></div>
+      </div>
+      
+      <div class="question-area">
+        <div id="soal-area">
+          <p>Pilih nomor soal untuk memulai ujian</p>
+        </div>
+        
+        <div class="navigation">
+          <button class="btn btn-doubt" id="btn-doubt">Ragu-Ragu</button>
+          <div>
+            <button class="btn" id="btn-back">Sebelumnya</button>
+            <button class="btn btn-next" id="btn-next">Berikutnya</button>
+            <button class="btn btn-next" id="btn-finish" style="display:none;">Selesai</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="score-container" id="skor-container">
+      <h2 class="score-title">Hasil Ujian</h2>
+      <div class="score-item">
+        <span>Teknis:</span>
+        <span id="skor-teknis">0</span>
+      </div>
+      <div class="score-item">
+        <span>Sosiokultural:</span>
+        <span id="skor-sosial">0</span>
+      </div>
+      <div class="score-item">
+        <span>Manajerial:</span>
+        <span id="skor-manajerial">0</span>
+      </div>
+      <div class="score-item">
+        <span>Wawancara:</span>
+        <span id="skor-wawancara">0</span>
+      </div>
+      <p id="reset-notice" style="font-style:italic; color:#666; margin-top:20px;"></p>
+    </div>
+    <div id="review-page" style="display:none; max-width:800px; margin:30px auto; padding:20px; background:white; border-radius:8px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+      <button id="back-to-score" style="padding:10px 20px; background:#2a5ea8; color:white; border:none; border-radius:5px; cursor:pointer; margin-bottom:20px;">Kembali ke Hasil</button>
+      <div id="review-content"></div>
+    </div>
+  </div>
+
+  <!-- Notifikasi Recovery -->
+  <div class="recovery-notice" id="recovery-notice">
+    Progress ujian sebelumnya ditemukan. Klik untuk memulihkan.
+  </div>
+
+  <script src="soal.js"></script>
+  <script>
+    // ================== KONSTANTA ==================
+    const DURASI_UJIAN = 120 * 60; // 120 menit dalam detik
+    const DELAY_RESET = 10000; // 10 detik setelah skor tampil
+
+    // ================== VARIABEL ==================
+    let jawabanUser = {};
+    let waktu = DURASI_UJIAN;
+    let timerInterval;
+    let indexAktif = 0;
+    let statusSoal = [];
+    let soalAcak = []; // Tetap pakai variabel ini, tapi isinya soal berurut
+    let nomorPeserta = '';
+    let resetTimeout;
+    let autoSaveInterval;
+
+    // ================== FUNGSI BARU: LOCALSTORAGE HANDLER ==================
+    function simpanProgress() {
+      try {
+        const progressData = {
+          jawaban: jawabanUser,
+          status: statusSoal,
+          index: indexAktif,
+          waktu: waktu,
+          timestamp: Date.now()
+        };
+        localStorage.setItem(`ujian_progress_${nomorPeserta}`, JSON.stringify(progressData));
+        console.log('Progress tersimpan');
+      } catch (e) {
+        console.error('Gagal menyimpan progress:', e);
+        // Fallback: Hanya simpan jawaban terakhir jika storage penuh
+        localStorage.setItem(`ujian_last_${nomorPeserta}`, JSON.stringify({
+          index: indexAktif,
+          jawaban: jawabanUser[indexAktif]
+        }));
+      }
+    }
+
+    function loadProgress() {
+      const savedData = localStorage.getItem(`ujian_progress_${nomorPeserta}`);
+      if (savedData) {
+        try {
+          const progress = JSON.parse(savedData);
+          jawabanUser = progress.jawaban || {};
+          statusSoal = progress.status || Array(soal.length).fill('unanswered');
+          indexAktif = progress.index || 0;
+          waktu = progress.waktu || DURASI_UJIAN;
+          
+          // Tampilkan notifikasi recovery
+          const now = Date.now();
+          const diffMinutes = Math.floor((now - progress.timestamp) / 60000);
+          if (diffMinutes < 60) { // Hanya tampilkan jika < 1 jam
+            const notice = document.getElementById('recovery-notice');
+            notice.style.display = 'block';
+            notice.onclick = () => {
+              notice.style.display = 'none';
+              tampilkanSoal(indexAktif);
+              tampilkanDaftarSoal();
+              mulaiTimer();
+            };
+          }
+          return true;
+        } catch (e) {
+          console.error('Gagal memuat progress:', e);
+        }
+      }
+      return false;
+    }
+
+    function clearProgress() {
+      localStorage.removeItem(`ujian_progress_${nomorPeserta}`);
+      localStorage.removeItem(`ujian_last_${nomorPeserta}`);
+    }
+
+    // ================== MODIFIKASI FUNGSI ASLI ==================
+    function mulaiUjian() {
+      nomorPeserta = document.getElementById('input-nomor').value.trim() || 'PESERTA_' + Date.now();
+      
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('exam-container').style.display = 'block';
+      document.getElementById('student-info').textContent = `SELAMAT MENGERJAKAN - ${nomorPeserta}`;
+      
+      soalAcak = soal; // Langsung pakai array soal dari soal.js
+      
+      // Coba muat progress yang tersimpan
+      const hasProgress = loadProgress();
+      
+      if (!hasProgress) {
+        waktu = DURASI_UJIAN;
+        statusSoal = Array(soalAcak.length).fill('unanswered');
+        jawabanUser = {};
+        indexAktif = 0;
+      }
+      
+      tampilkanDaftarSoal();
+      tampilkanSoal(indexAktif);
+      mulaiTimer();
+      
+      // Mulai auto-save setiap 15 detik
+      autoSaveInterval = setInterval(simpanProgress, 15000);
+      
+      // Tambahkan event beforeunload
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    }
+
+    function handleBeforeUnload(e) {
+      if (Object.keys(jawabanUser).length > 0) {
+        simpanProgress(); // Simpan terakhir kali sebelum keluar
+        e.preventDefault();
+        e.returnValue = 'Progress ujian Anda akan disimpan. Yakin ingin keluar?';
+        return e.returnValue;
+      }
+    }
+
+    function tampilkanSkor() {
+      clearInterval(timerInterval);
+      clearInterval(autoSaveInterval);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      
+      // Hapus data progress
+      clearProgress();
+      
+      // Hitung skor (kode asli tetap sama)
+      let skorTeknis = 0, skorSosial = 0, skorManajerial = 0, skorWawancara = 0;
+      
+      soalAcak.forEach((s, i) => {
+        const jwb = jawabanUser[i];
+        if (!jwb) return;
+
+        const kategori = s.kategori.toLowerCase();
+        const nilai = (typeof s.skor === 'object') ? (s.skor[jwb] || 0) :
+              (s.jawaban === jwb ? s.skor : 0); 
+
+        if (kategori.includes('teknis')) skorTeknis += nilai;
+        else if (kategori.includes('sosio')) skorSosial += nilai;
+        else if (kategori.includes('manajerial')) skorManajerial += nilai;
+        else if (kategori.includes('wawancara')) skorWawancara += nilai;
+      });
+
+      // Tampilkan skor
+      document.querySelector('.main-container').style.display = 'none';
+      document.getElementById('skor-container').style.display = 'block';
+      document.getElementById('skor-teknis').textContent = skorTeknis;
+      document.getElementById('skor-sosial').textContent = skorSosial;
+      document.getElementById('skor-manajerial').textContent = skorManajerial;
+      document.getElementById('skor-wawancara').textContent = skorWawancara;
+      document.getElementById('reset-notice').textContent = 'Ujian selesai!';
+    }
+
+    // ================== FUNGSI TAMPILKAN REVIEW ==================
+    function showAnswerReview() {
+      document.getElementById('skor-container').style.display = 'none';
+      document.getElementById('review-page').style.display = 'block';
+      
+      const container = document.getElementById('review-content');
+      container.innerHTML = '<h2 style="color:#2a5ea8; text-align:center; margin-bottom:20px;">REVIEW JAWABAN</h2>';
+
+      // 1. Buat mapping antara nomor soal dan jawaban user
+      const jawabanMap = {};
+      soalAcak.forEach((soal, index) => {
+        jawabanMap[soal.no] = jawabanUser[index];
+      });
+
+      // 2. Kategorikan soal asli (dari soal.js) tanpa mengubah urutan
+      const categories = [
+        { name: 'TEKNIS', range: [1, 50] },
+        { name: 'SOSIO KULTURAL', range: [51, 75] },
+        { name: 'MANAJERIAL', range: [76, 96] },
+        { name: 'WAWANCARA', range: [97, 110] }
+      ];
+
+      categories.forEach(cat => {
+        const filtered = soal.filter(s => s.no >= cat.range[0] && s.no <= cat.range[1]);
+        
+        if (filtered.length > 0) {
+          container.innerHTML += `
+            <h3 style="color:#2a5ea8; border-bottom:2px solid #2a5ea8; padding-bottom:5px; margin:30px 0 15px;">
+              ${cat.name} (Soal ${cat.range[0]}-${cat.range[1]})
+            </h3>
+          `;
+
+          filtered.forEach(soal => {
+            const userAnswer = jawabanMap[soal.no] || null;
+            const correctAnswer = soal.jawaban;
+            
+            // Hitung skor
+            const skor = soal.skor || soal.score || {};
+            const isSkorObject = typeof skor === 'object';
+            const userScore = isSkorObject 
+              ? (userAnswer ? (skor[userAnswer] || 0) : 0)
+              : (userAnswer === correctAnswer ? skor : 0);
+
+            // Tampilkan opsi
+            let optionsHTML = '';
+            Object.entries(soal.opsi).forEach(([key, val]) => {
+              const isCorrect = key === correctAnswer;
+              const isUserAnswer = key === userAnswer;
+              const pointValue = isSkorObject ? ` (point ${skor[key]})` : '';
+              
+              optionsHTML += `
+                <div style="margin:5px 0; padding:5px; ${isUserAnswer ? 'background:#f5f5f5;' : ''}">
+                  ${key}. ${val} 
+                  ${isCorrect ? '<span style="color:#4CAF50; font-weight:bold;">✓</span>' : ''}
+                  ${isUserAnswer && !isCorrect ? '<span style="color:#e74c3c; font-weight:bold;">✗</span>' : ''}
+                  ${pointValue}
+                </div>
+              `;
+            });
+            
+            container.innerHTML += `
+              <div style="margin-bottom:30px; padding-bottom:20px; border-bottom:1px solid #eee;">
+                <p><strong>Soal ${soal.no}</strong></p>
+                <p>${soal.soal}</p>
+                <div style="margin:15px 0 0 20px;">${optionsHTML}</div>
+                <div style="margin-top:15px;">
+                  <p>Jawaban Anda: <strong>${userAnswer || 'Tidak dijawab'}</strong>
+                  ${userAnswer === correctAnswer ? 
+                    '<span style="color:#4CAF50;"> (BENAR)</span>' : 
+                    userAnswer ? '<span style="color:#e74c3c;"> (SALAH)</span>' : ''}
+                  </p>
+                  <p>Skor: <strong>${userScore}</strong></p>
+                </div>
+              </div>
+            `;
+          });
+        }
+      });
+
+      // Tambahkan tombol kembali
+      container.innerHTML += `
+        <div style="text-align:center; margin-top:30px;">
+          <button onclick="document.getElementById('review-page').style.display='none';
+                         document.getElementById('skor-container').style.display='block';"
+                  style="padding:10px 20px; background:#2a5ea8; color:white;
+                         border:none; border-radius:5px; cursor:pointer;">
+            Kembali ke Hasil
+          </button>
+        </div>
+      `;
+    }
+
+    // ================== EVENT LISTENER ==================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Event listener untuk jawaban
+      document.addEventListener('change', (e) => {
+        if (e.target.name === 'opsi') {
+          jawabanUser[indexAktif] = e.target.value;
+          statusSoal[indexAktif] = 'answered';
+          tampilkanDaftarSoal();
+          simpanProgress(); // Simpan setiap jawaban berubah
+        }
+      });
+      
+      // Tombol navigasi
+      document.getElementById('btn-back').addEventListener('click', () => {
+        if (indexAktif > 0) tampilkanSoal(indexAktif - 1);
+      });
+      
+      document.getElementById('btn-next').addEventListener('click', () => {
+        if (indexAktif < soalAcak.length - 1) tampilkanSoal(indexAktif + 1);
+      });
+      
+      document.getElementById('btn-finish').addEventListener('click', () => {
+        if (confirm('Apakah Anda yakin ingin menyelesaikan ujian?')) {
+          tampilkanSkor();
+        }
+      });
+      
+      // Tombol ragu-ragu
+      document.getElementById('btn-doubt').addEventListener('click', () => {
+        statusSoal[indexAktif] = 'doubt';
+        tampilkanDaftarSoal();
+        simpanProgress();
+      });
+
+      // Tombol review jawaban
+      const reviewBtn = document.createElement('button');
+      reviewBtn.textContent = 'Lihat Detail Jawaban (✓/✗)';
+      reviewBtn.style.cssText = `
+        padding: 10px 20px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-top: 20px;
+        cursor: pointer;
+      `;
+      reviewBtn.onclick = showAnswerReview;
+      document.getElementById('skor-container').appendChild(reviewBtn);
+    });
+
+    // ================== FUNGSI ASLI YANG TIDAK DIUBAH ==================
+    function tampilkanDaftarSoal() {
+      const daftar = document.getElementById('daftar-soal');
+      daftar.innerHTML = '';
+      
+      soalAcak.forEach((_, i) => {
+        const btn = document.createElement('div');
+        btn.textContent = i + 1;
+        btn.className = `question-number ${statusSoal[i]}`;
+        btn.dataset.index = i;
+        btn.onclick = () => tampilkanSoal(i);
+        daftar.appendChild(btn);
+      });
+    }
+
+    function tampilkanSoal(index) {
+      indexAktif = index;
+      const s = soalAcak[index];
+      
+      // Update status navigasi
+      document.querySelectorAll('.question-number').forEach(el => {
+        el.classList.remove('current');
+      });
+      document.querySelector(`.question-number[data-index="${index}"]`).classList.add('current');
+      
+      // Tampilkan soal (pakai nomor asli dari soal.no)
+      const opsi = Object.entries(s.opsi).map(([key, val]) => {
+        const checked = jawabanUser[index] === key ? 'checked' : '';
+        return `
+          <div class="option">
+            <input type="radio" name="opsi" id="opsi-${key}" value="${key}" ${checked}>
+            <label for="opsi-${key}">${key}. ${val}</label>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('soal-area').innerHTML = `
+        <div class="question-category">Soal No ${s.no} - ${s.kategori}</div>
+        <div class="question-text">${s.soal}</div>
+        <div class="options">${opsi}</div>
+      `;
+
+      // Update tombol navigasi
+      document.getElementById('btn-back').disabled = index === 0;
+      document.getElementById('btn-next').disabled = index === soalAcak.length - 1;
+      document.getElementById('btn-finish').style.display = 
+        (index === soalAcak.length - 1) ? 'inline-block' : 'none';
+    }
+
+    function mulaiTimer() {
+      clearInterval(timerInterval);
+      
+      timerInterval = setInterval(() => {
+        waktu--;
+        const menit = String(Math.floor(waktu / 60)).padStart(2, '0');
+        const detik = String(waktu % 60).padStart(2, '0');
+        document.getElementById('timer').textContent = `Waktu: ${menit}:${detik}`;
+        
+        if (waktu <= 300) { // 5 menit terakhir
+          document.getElementById('timer').classList.add('warning');
+        }
+        
+        if (waktu <= 0) {
+          clearInterval(timerInterval);
+          tampilkanSkor();
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
